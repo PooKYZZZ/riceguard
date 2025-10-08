@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <body>
+    <h3>RiceGuard API Web Test</h3>
+
+    <button id="register">Register</button>
+    <button id="login">Login</button>
+    <input id="token" placeholder="paste token here" style="width:420px" />
+    <hr/>
+
+    <form id="scanForm">
+      <input name="label" value="brown_spot" />
+      <input name="confidence" value="0.9" />
+      <input name="modelVersion" value="rg_v1.0" />
+      <input name="notes" placeholder="optional notes" />
+      <input type="file" name="image" accept="image/png,image/jpeg" />
+      <button type="submit">Create Scan</button>
+    </form>
+
+    <button id="listScans">List Scans</button>
+    <button id="getReco">Get Recommendation (brown_spot)</button>
+
+    <pre id="out"></pre>
+
+    <script>
+      const BASE = "http://127.0.0.1:8000/api/v1"; // change if needed
+      const out = (data) => document.querySelector("#out").textContent = JSON.stringify(data, null, 2);
+      const getToken = () => document.querySelector("#token").value.trim();
+
+      // 1) Register
+      document.querySelector("#register").onclick = async () => {
+        const res = await fetch(`${BASE}/auth/register`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            name: "Test User",
+            email: `user${Date.now()}@test.com`,
+            password: "password123"
+          })
+        });
+        out(await res.json());
+      };
+
+      // 2) Login
+      document.querySelector("#login").onclick = async () => {
+        // Use the email you registered above
+        const email = prompt("Email used for register:", "user@test.com");
+        const password = prompt("Password:", "password123");
+        const res = await fetch(`${BASE}/auth/login`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        out(data);
+        if (data.accessToken) {
+          document.querySelector("#token").value = data.accessToken;
+        }
+      };
+
+      // 3) Create Scan (multipart form)
+      document.querySelector("#scanForm").onsubmit = async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const res = await fetch(`${BASE}/scans`, {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${getToken()}` },
+          body: fd
+        });
+        out(await res.json());
+      };
+
+      // 4) List Scans
+      document.querySelector("#listScans").onclick = async () => {
+        const res = await fetch(`${BASE}/scans?limit=5`, {
+          headers: { "Authorization": `Bearer ${getToken()}` }
+        });
+        out(await res.json());
+      };
+
+      // 5) Get Recommendation
+      document.querySelector("#getReco").onclick = async () => {
+        const res = await fetch(`${BASE}/recommendations/brown_spot`);
+        out(await res.json());
+      };
+    </script>
+  </body>
+</html>
