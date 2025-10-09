@@ -1,31 +1,29 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from routers import router as api_router
 from db import ensure_indexes
 from seed import seed_recommendations
-from settings import ALLOWED_ORIGINS
+from settings import ALLOWED_ORIGINS, UPLOAD_DIR
+import os
 
 
-# ✅ New-style lifespan handler
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Runs once when app starts
     ensure_indexes()
     seed_recommendations()
-    print("🚀 RiceGuard backend is ready to serve requests.")
+    print("🚀 RiceGuard backend ready (Web + Mobile).")
     yield
-    # (Optional) Runs once when app shuts down
     print("🛑 RiceGuard backend shutting down...")
 
 
 app = FastAPI(
-    title="RiceGuard Backend",
-    version="1.0",
-    description="API backend for RiceGuard mobile/web app.",
+    title="RiceGuard Unified Backend",
+    version="1.1",
+    description="Single API backend for RiceGuard Web and Mobile applications.",
     lifespan=lifespan,
 )
-
 
 # ---------------------- CORS --------------------------
 app.add_middleware(
@@ -36,10 +34,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ---------------------- STATIC FILES -------------------
+if not os.path.exists(UPLOAD_DIR):
+    os.makedirs(UPLOAD_DIR)
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+
 # ---------------------- HEALTH ------------------------
 @app.get("/health")
 def health():
-    return {"status": "ok", "message": "RiceGuard backend is running."}
+    return {"status": "ok", "message": "RiceGuard backend (Web + Mobile) is running."}
 
 # ---------------------- ROUTERS -----------------------
 app.include_router(api_router, prefix="/api/v1")
