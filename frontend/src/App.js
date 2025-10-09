@@ -4,12 +4,10 @@ import Button from './components/button';
 
 function App() {
   // --- CONFIG ---
-  // CRA: read API base from REACT_APP_API_URL; fallback to localhost
   const API_BASE =
     process.env.REACT_APP_API_URL?.replace(/\/+$/, '') ||
     'http://127.0.0.1:8000/api/v1';
 
-  // Keep your existing public URL images
   const publicUrl = process.env.PUBLIC_URL || '';
   const bgUrl = `${publicUrl}/bg.jpg`;
   const logoUrl = `${publicUrl}/logo.png`;
@@ -32,10 +30,7 @@ function App() {
   const [authBusy, setAuthBusy] = useState(false);
   const [authError, setAuthError] = useState('');
 
-  // (optional) read saved user/token if you want to reflect logged-in state later
-  // const savedUser = JSON.parse(localStorage.getItem('rg_user') || 'null');
-  // const savedToken = localStorage.getItem('rg_token') || '';
-
+  // ---------------- LOGIN & SIGNUP MODALS ----------------
   function openLogin() {
     setAuthError('');
     setLoginOpen(true);
@@ -63,7 +58,7 @@ function App() {
     setAuthError('');
   }
 
-  // ---- API HELPERS ----
+  // ---------------- API HELPERS ----------------
   async function apiRegister({ name, email, password }) {
     const res = await fetch(`${API_BASE}/auth/register`, {
       method: 'POST',
@@ -71,10 +66,8 @@ function App() {
       body: JSON.stringify({ name, email, password }),
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.detail || 'Register failed');
-    }
-    return data; // { id, name, email }
+    if (!res.ok) throw new Error(data.detail || 'Register failed');
+    return data;
   }
 
   async function apiLogin({ email, password }) {
@@ -84,19 +77,16 @@ function App() {
       body: JSON.stringify({ email, password }),
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.detail || 'Login failed');
-    }
-    return data; // { accessToken, user:{id,name,email} }
+    if (!res.ok) throw new Error(data.detail || 'Login failed');
+    return data;
   }
 
-  // ---- HANDLERS ----
+  // ---------------- HANDLERS ----------------
   async function submitSignup(e) {
     e.preventDefault();
     setSignupError('');
     setAuthError('');
 
-    // client-side validation
     const email = signupEmail.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -112,23 +102,17 @@ function App() {
       return;
     }
 
-    // Backend requires a name. Since your UI doesn’t include one,
-    // derive a simple display name from the email (before @).
     const derivedName = email.split('@')[0] || 'User';
 
     try {
       setAuthBusy(true);
-      // 1) Register
       await apiRegister({ name: derivedName, email, password: signupPass });
-      // 2) Auto-login
       const auth = await apiLogin({ email, password: signupPass });
 
-      // 3) Save token & user for later use
       localStorage.setItem('rg_token', auth.accessToken);
       localStorage.setItem('rg_user', JSON.stringify(auth.user));
 
       closeSignup();
-      // OPTIONAL: redirect or update UI based on logged-in state
     } catch (err) {
       setAuthError(err.message || 'Sign up failed');
     } finally {
@@ -145,7 +129,6 @@ function App() {
       localStorage.setItem('rg_token', auth.accessToken);
       localStorage.setItem('rg_user', JSON.stringify(auth.user));
       closeLogin();
-      // OPTIONAL: redirect or update UI based on logged-in state
     } catch (err) {
       setAuthError(err.message || 'Login failed');
     } finally {
@@ -153,7 +136,7 @@ function App() {
     }
   }
 
-  // optional debug helper from your original code
+  // optional debug helper
   useEffect(() => {
     if (!loginOpen) return;
     function onFocusIn() {
@@ -165,20 +148,49 @@ function App() {
     return () => document.removeEventListener('focusin', onFocusIn);
   }, [loginOpen]);
 
+  // ---------------- RENDER ----------------
   return (
     <div className="App">
       <img src={bgUrl} alt="background" className="bg-image" />
 
       <div className="content">
         <img src={logoUrl} alt="logo" className="logo" />
-        <p className="tagline">We're here to guide you " Your Smart Companion for Healthy Rice Fields "</p>
 
-        <div className="actions">
-          <Button variant="outline" onClick={openLogin}>Log in</Button>
-          <Button variant="primary" onClick={openSignup}>Sign Up</Button>
-        </div>
+        {localStorage.getItem('rg_user') ? (
+          <>
+            <p className="tagline">
+              Welcome back,{' '}
+              {JSON.parse(localStorage.getItem('rg_user')).name ||
+                JSON.parse(localStorage.getItem('rg_user')).email}
+              !
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => {
+                localStorage.clear();
+                window.location.reload();
+              }}
+            >
+              Log out
+            </Button>
+          </>
+        ) : (
+          <>
+            <p className="tagline">
+              We're here to guide you — Your Smart Companion for Healthy Rice Fields
+            </p>
+            <div className="actions">
+              <Button variant="outline" onClick={openLogin}>
+                Log in
+              </Button>
+              <Button variant="primary" onClick={openSignup}>
+                Sign Up
+              </Button>
+            </div>
+          </>
+        )}
 
-        {/* Shared auth error (backend errors) */}
+        {/* Shared auth error */}
         {authError && (
           <div style={{ color: '#b91c1c', marginTop: '0.5rem' }}>{authError}</div>
         )}
@@ -188,7 +200,11 @@ function App() {
         <div className="modal-backdrop" onClick={closeLogin}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-avatar-wrap">
-              <img src={`${publicUrl}/user.png`} alt="user avatar" className="modal-avatar" />
+              <img
+                src={`${publicUrl}/user.png`}
+                alt="user avatar"
+                className="modal-avatar"
+              />
             </div>
             <h2>Log in</h2>
             <form onSubmit={submitLogin}>
@@ -213,7 +229,9 @@ function App() {
                 />
               </div>
               <div className="modal-actions">
-                <Button variant="outline" type="button" onClick={closeLogin}>Cancel</Button>
+                <Button variant="outline" type="button" onClick={closeLogin}>
+                  Cancel
+                </Button>
                 <Button variant="primary" type="submit" disabled={authBusy}>
                   {authBusy ? 'Please wait…' : 'Log in'}
                 </Button>
@@ -227,11 +245,14 @@ function App() {
         <div className="modal-backdrop" onClick={closeSignup}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-avatar-wrap">
-              <img src={`${publicUrl}/user.png`} alt="user avatar" className="modal-avatar" />
+              <img
+                src={`${publicUrl}/user.png`}
+                alt="user avatar"
+                className="modal-avatar"
+              />
             </div>
             <h2>Sign Up</h2>
             <form onSubmit={submitSignup}>
-              {/* Username intentionally omitted; we'll derive from email */}
               <div className="field">
                 <span className="label-text">Email</span>
                 <input
@@ -264,13 +285,19 @@ function App() {
               </div>
 
               {signupError && (
-                <div className="signup-error" role="alert" style={{ color: '#b91c1c', marginTop: '0.25rem' }}>
+                <div
+                  className="signup-error"
+                  role="alert"
+                  style={{ color: '#b91c1c', marginTop: '0.25rem' }}
+                >
                   {signupError}
                 </div>
               )}
 
               <div className="modal-actions">
-                <Button variant="outline" type="button" onClick={closeSignup}>Cancel</Button>
+                <Button variant="outline" type="button" onClick={closeSignup}>
+                  Cancel
+                </Button>
                 <Button variant="primary" type="submit" disabled={authBusy}>
                   {authBusy ? 'Please wait…' : 'Sign Up'}
                 </Button>
