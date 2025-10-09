@@ -1,10 +1,10 @@
 html, body, #root {
   height: 100%;
   margin: 0;
-  overflow: hidden; /* Disable scrolling */
+  overflow: hidden; 
 }
 
-/* App wrapper */
+
 .App {
   position: relative;
   color: white;
@@ -14,18 +14,16 @@ html, body, #root {
   overflow: hidden;
 }
 
-/* ✅ Fixed background image (prevents scrolling) */
 .bg-image {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Fills entire screen */
-  z-index: -1; /* Behind everything */
+  object-fit: cover; 
+  z-index: -1; 
 }
 
-/* Center content in viewport */
 .content {
   position: absolute;
   top: 50%;
