@@ -8,9 +8,8 @@ function App() {
   const logoUrl = `${publicUrl}/logo.png`;
   const [loginOpen, setLoginOpen] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
-  const [username, setUsername] = useState('');
+  const [loginEmail, setLoginEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [signupUser, setSignupUser] = useState('');
   const [signupPass, setSignupPass] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupConfirm, setSignupConfirm] = useState('');
@@ -22,7 +21,7 @@ function App() {
 
   function closeLogin() {
     setLoginOpen(false);
-    setUsername('');
+    setLoginEmail('');
     setPassword('');
   }
 
@@ -32,7 +31,6 @@ function App() {
 
   function closeSignup() {
     setSignupOpen(false);
-    setSignupUser('');
     setSignupPass('');
     setSignupEmail('');
     setSignupConfirm('');
@@ -59,7 +57,7 @@ function App() {
       return;
     }
 
-    console.log('Signup submit', { signupUser, signupEmail, signupPass });
+    console.log('Signup submit', { signupEmail, signupPass });
     // TODO: send to backend or further processing
     closeSignup();
   }
@@ -67,12 +65,12 @@ function App() {
   function submitLogin(e) {
     e.preventDefault();
     // For now just log credentials (do not do this in production)
-    console.log('Login submit', { username, password });
+    console.log('Login submit', { loginEmail, password });
     // Close modal after submit
     closeLogin();
   }
 
-  // Debug helper: when modal is open, log focus changes to see which element is focused
+  
   useEffect(() => {
     if (!loginOpen) return;
     function onFocusIn(e) {
@@ -108,8 +106,8 @@ function App() {
               <h2>Log in</h2>
             <form onSubmit={submitLogin}>
               <div className="field">
-                <span className="label-text">Username</span>
-                <input id="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                <span className="label-text">Email</span>
+                <input id="loginEmail" type="email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required />
               </div>
               <div className="field">
                 <span className="label-text">Password</span>
@@ -131,10 +129,7 @@ function App() {
             </div>
             <h2>Sign Up</h2>
             <form onSubmit={submitSignup}>
-              <div className="field">
-                <span className="label-text">Username</span>
-                <input id="signupUser" value={signupUser} onChange={(e) => setSignupUser(e.target.value)} required />
-              </div>
+              {/* Username removed from signup form per request */}
               <div className="field">
                 <span className="label-text">Email</span>
                 <input id="signupEmail" type="email" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required />
