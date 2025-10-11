@@ -169,42 +169,6 @@ function App() {
       <div className="content">
         <img src={logoUrl} alt="logo" className="logo" />
 
-<<<<<<< HEAD
-        {localStorage.getItem('rg_user') ? (
-          <>
-            <p className="tagline">
-              Welcome back,{' '}
-              {JSON.parse(localStorage.getItem('rg_user')).name ||
-                JSON.parse(localStorage.getItem('rg_user')).email}
-              !
-            </p>
-            <Button
-              variant="outline"
-              onClick={() => {
-                localStorage.clear();
-                window.location.reload();
-              }}
-            >
-              Log out
-            </Button>
-          </>
-        ) : (
-          <>
-            <p className="tagline">
-              We're here to guide you — Your Smart Companion for Healthy Rice Fields
-            </p>
-            <div className="actions">
-              <Button variant="outline" onClick={openLogin}>
-                Log in
-              </Button>
-              <Button variant="primary" onClick={openSignup}>
-                Sign Up
-              </Button>
-            </div>
-          </>
-        )}
-
-=======
         <div className="logo-actions">
           <Button variant="outline" onClick={() => setRoute('home')}>Home</Button>
           <Button variant="outline" onClick={() => setRoute('history')}>History</Button>
@@ -253,7 +217,6 @@ function App() {
           </>
         )}
 
->>>>>>> 29e2dda8098aebbeb1130ef77f899e1273300065
         {/* Shared auth error */}
         {authError && (
           <div style={{ color: '#b91c1c', marginTop: '0.5rem' }}>{authError}</div>
