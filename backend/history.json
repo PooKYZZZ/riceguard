@@ -1,0 +1,284 @@
+[
+    {
+        "id": 1,
+        "image": "20251011131047_rice-leaf-disease-fungus-blast-232531761.webp",
+        "prediction": "Bacterial Leaf Blight",
+        "confidence": 37.18,
+        "recommendation": "Remove infected plants immediately and avoid excessive nitrogen fertilizer. Apply copper-based bactericides and ensure proper field drainage to prevent spread.",
+        "timestamp": "October 11, 2025 01:10 PM"
+    },
+    {
+        "id": 2,
+        "image": "20251011131224_images.jpg",
+        "prediction": "Brown Spot",
+        "confidence": 92.13,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity.",
+        "timestamp": "October 11, 2025 01:12 PM"
+    },
+    {
+        "id": 3,
+        "image": "20251011131359_rice-leaf-disease-fungus-blast-232531761.webp",
+        "prediction": "Bacterial Leaf Blight",
+        "confidence": 37.18,
+        "recommendation": "Remove infected plants immediately and avoid excessive nitrogen fertilizer. Apply copper-based bactericides and ensure proper field drainage to prevent spread.",
+        "timestamp": "October 11, 2025 01:14 PM"
+    },
+    {
+        "id": 4,
+        "image": "20251011131524_images.jpg",
+        "prediction": "Brown Spot",
+        "confidence": 92.13,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity.",
+        "timestamp": "October 11, 2025 01:15 PM"
+    },
+    {
+        "id": 5,
+        "image": "20251011131904_images.jpg",
+        "prediction": "Brown Spot",
+        "confidence": 92.13,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity.",
+        "timestamp": "October 11, 2025 01:19 PM"
+    },
+    {
+        "id": 6,
+        "image": "20251011132107_rice-leaf-disease-fungus-blast-232531761.webp",
+        "prediction": "Bacterial Leaf Blight",
+        "confidence": 37.18,
+        "recommendation": "Remove infected plants immediately and avoid excessive nitrogen fertilizer. Apply copper-based bactericides and ensure proper field drainage to prevent spread.",
+        "timestamp": "October 11, 2025 01:21 PM"
+    },
+    {
+        "id": 7,
+        "image": "20251011132119_images.jpg",
+        "prediction": "Brown Spot",
+        "confidence": 92.13,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity.",
+        "timestamp": "October 11, 2025 01:21 PM"
+    },
+    {
+        "id": 8,
+        "image": "20251011132122_images.jpg",
+        "prediction": "Brown Spot",
+        "confidence": 92.13,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity.",
+        "timestamp": "October 11, 2025 01:21 PM"
+    },
+    {
+        "id": 9,
+        "image": "20251011132127_images.jpg",
+        "prediction": "Brown Spot",
+        "confidence": 92.13,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity.",
+        "timestamp": "October 11, 2025 01:21 PM"
+    },
+    {
+        "timestamp": "2025-10-11 13:23:41",
+        "disease": "Healthy",
+        "confidence": 95.14,
+        "recommendation": "Your rice crop appears healthy. Continue good farming practices and proper irrigation."
+    },
+    {
+        "timestamp": "2025-10-11 13:24:11",
+        "disease": "Healthy",
+        "confidence": 88.18,
+        "recommendation": "Your rice crop appears healthy. Continue good farming practices and proper irrigation."
+    },
+    {
+        "timestamp": "2025-10-11 13:24:17",
+        "disease": "Healthy",
+        "confidence": 90.52,
+        "recommendation": "Your rice crop appears healthy. Continue good farming practices and proper irrigation."
+    },
+    {
+        "timestamp": "2025-10-11 13:25:24",
+        "disease": "Bacterial Leaf Blight",
+        "confidence": 85.2,
+        "recommendation": "Remove infected plants immediately and avoid excessive nitrogen fertilizer. Apply copper-based bactericides and ensure proper field drainage."
+    },
+    {
+        "timestamp": "2025-10-11 13:25:51",
+        "disease": "Healthy",
+        "confidence": 98.27,
+        "recommendation": "Your rice crop appears healthy. Continue good farming practices and proper irrigation."
+    },
+    {
+        "timestamp": "2025-10-11 13:25:54",
+        "disease": "Brown Spot",
+        "confidence": 96.38,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity."
+    },
+    {
+        "timestamp": "2025-10-11 13:25:57",
+        "disease": "Leaf Smut",
+        "confidence": 86.08,
+        "recommendation": "Use resistant rice varieties and practice crop rotation. Avoid high nitrogen levels and maintain proper field sanitation."
+    },
+    {
+        "timestamp": "2025-10-11 13:25:58",
+        "disease": "Leaf Smut",
+        "confidence": 85.85,
+        "recommendation": "Use resistant rice varieties and practice crop rotation. Avoid high nitrogen levels and maintain proper field sanitation."
+    },
+    {
+        "timestamp": "2025-10-11 13:26:54",
+        "disease": "Healthy",
+        "confidence": 87.95,
+        "recommendation": "Your rice crop appears healthy. Continue good farming practices and proper irrigation."
+    },
+    {
+        "timestamp": "2025-10-11 13:28:49",
+        "disease": "Brown Spot",
+        "confidence": 91.79,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity."
+    },
+    {
+        "timestamp": "2025-10-11 13:32:37",
+        "disease": "Leaf Smut",
+        "confidence": 85.16,
+        "recommendation": "Use resistant rice varieties and practice crop rotation. Avoid high nitrogen levels and maintain proper field sanitation."
+    },
+    {
+        "timestamp": "2025-10-11 13:35:07",
+        "disease": "Brown Spot",
+        "confidence": 90.8,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity."
+    },
+    {
+        "timestamp": "2025-10-11 13:58:13",
+        "disease": "Bacterial Leaf Blight",
+        "confidence": 93.39,
+        "recommendation": "Remove infected plants immediately and avoid excessive nitrogen fertilizer. Apply copper-based bactericides and ensure proper field drainage."
+    },
+    {
+        "timestamp": "2025-10-11 13:59:18",
+        "disease": "Brown Spot",
+        "confidence": 88.19,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity."
+    },
+    {
+        "timestamp": "2025-10-11 14:00:39",
+        "disease": "Healthy",
+        "confidence": 88.19,
+        "recommendation": "Your rice crop appears healthy. Continue good farming practices and proper irrigation."
+    },
+    {
+        "timestamp": "2025-10-11 14:00:49",
+        "disease": "Bacterial Leaf Blight",
+        "confidence": 98.28,
+        "recommendation": "Remove infected plants immediately and avoid excessive nitrogen fertilizer. Apply copper-based bactericides and ensure proper field drainage."
+    },
+    {
+        "timestamp": "2025-10-11 14:00:52",
+        "disease": "Healthy",
+        "confidence": 95.73,
+        "recommendation": "Your rice crop appears healthy. Continue good farming practices and proper irrigation."
+    },
+    {
+        "timestamp": "2025-10-11 14:00:53",
+        "disease": "Healthy",
+        "confidence": 93.55,
+        "recommendation": "Your rice crop appears healthy. Continue good farming practices and proper irrigation."
+    },
+    {
+        "timestamp": "2025-10-11 14:00:54",
+        "disease": "Leaf Smut",
+        "confidence": 91.53,
+        "recommendation": "Use resistant rice varieties and practice crop rotation. Avoid high nitrogen levels and maintain proper field sanitation."
+    },
+    {
+        "timestamp": "2025-10-11 14:00:56",
+        "disease": "Bacterial Leaf Blight",
+        "confidence": 94.73,
+        "recommendation": "Remove infected plants immediately and avoid excessive nitrogen fertilizer. Apply copper-based bactericides and ensure proper field drainage."
+    },
+    {
+        "timestamp": "2025-10-11 14:03:26",
+        "disease": "Leaf Smut",
+        "confidence": 85.67,
+        "recommendation": "Use resistant rice varieties and practice crop rotation. Avoid high nitrogen levels and maintain proper field sanitation."
+    },
+    {
+        "timestamp": "2025-10-11 14:04:34",
+        "disease": "Healthy",
+        "confidence": 98.16,
+        "recommendation": "Your rice crop appears healthy. Continue good farming practices and proper irrigation."
+    },
+    {
+        "timestamp": "2025-10-11 14:04:47",
+        "disease": "Brown Spot",
+        "confidence": 95.42,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity."
+    },
+    {
+        "timestamp": "2025-10-11 14:04:55",
+        "disease": "Bacterial Leaf Blight",
+        "confidence": 90.29,
+        "recommendation": "Remove infected plants immediately and avoid excessive nitrogen fertilizer. Apply copper-based bactericides and ensure proper field drainage."
+    },
+    {
+        "timestamp": "2025-10-11 14:04:57",
+        "disease": "Brown Spot",
+        "confidence": 86.57,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity."
+    },
+    {
+        "timestamp": "2025-10-11 14:04:57",
+        "disease": "Healthy",
+        "confidence": 85.25,
+        "recommendation": "Your rice crop appears healthy. Continue good farming practices and proper irrigation."
+    },
+    {
+        "timestamp": "2025-10-11 14:04:58",
+        "disease": "Bacterial Leaf Blight",
+        "confidence": 91.52,
+        "recommendation": "Remove infected plants immediately and avoid excessive nitrogen fertilizer. Apply copper-based bactericides and ensure proper field drainage."
+    },
+    {
+        "timestamp": "2025-10-11 14:04:59",
+        "disease": "Leaf Smut",
+        "confidence": 87.59,
+        "recommendation": "Use resistant rice varieties and practice crop rotation. Avoid high nitrogen levels and maintain proper field sanitation."
+    },
+    {
+        "timestamp": "2025-10-11 14:23:50",
+        "disease": "Bacterial Leaf Blight",
+        "confidence": 98.27,
+        "recommendation": "Remove infected plants immediately and avoid excessive nitrogen fertilizer. Apply copper-based bactericides and ensure proper field drainage."
+    },
+    {
+        "timestamp": "2025-10-11 14:34:53",
+        "disease": "Bacterial Leaf Blight",
+        "confidence": 92.79,
+        "recommendation": "Remove infected plants immediately and avoid excessive nitrogen fertilizer. Apply copper-based bactericides and ensure proper field drainage."
+    },
+    {
+        "timestamp": "2025-10-11 14:39:03",
+        "disease": "Brown Spot",
+        "confidence": 95.35,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity."
+    },
+    {
+        "timestamp": "2025-10-11 14:39:46",
+        "disease": "Leaf Smut",
+        "confidence": 98.63,
+        "recommendation": "Use resistant rice varieties and practice crop rotation. Avoid high nitrogen levels and maintain proper field sanitation."
+    },
+    {
+        "timestamp": "2025-10-11 14:39:53",
+        "disease": "Leaf Smut",
+        "confidence": 92.59,
+        "recommendation": "Use resistant rice varieties and practice crop rotation. Avoid high nitrogen levels and maintain proper field sanitation."
+    },
+    {
+        "timestamp": "2025-10-11 15:51:20",
+        "disease": "Brown Spot",
+        "confidence": 87.51,
+        "recommendation": "Apply balanced fertilizer with potassium and nitrogen. Use fungicides like Mancozeb or Tricyclazole if infection persists. Ensure proper spacing and water management to reduce humidity."
+    },
+    {
+        "timestamp": "2025-10-11 15:52:17",
+        "disease": "Bacterial Leaf Blight",
+        "confidence": 93.01,
+        "recommendation": "Remove infected plants immediately and avoid excessive nitrogen fertilizer. Apply copper-based bactericides and ensure proper field drainage."
+    }
+]

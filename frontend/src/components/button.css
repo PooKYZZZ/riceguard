@@ -17,20 +17,18 @@
 .btn:active { transform: translateY(1px); }
 
 .btn-primary {
-  background: #047857; 
+  background: #047857; /* darker green */
   color: white;
-  box-shadow: none; 
-  border-radius: 1.5rem;
+  box-shadow: none; /* remove heavy shadow by default */
 }
 
 .btn-outline {
   background: rgba(255,255,255,0.12);
-  color: inherit; 
+  color: inherit; /* inherit color from parent (so it works on white modal) */
   border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 1.5rem;
 }
 
 .btn:focus {
   outline: none;
-  box-shadow: none; 
+  box-shadow: none; /* remove focus shadow by default; modal overrides will provide accessibility focus */
 }

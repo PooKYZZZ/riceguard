@@ -1,0 +1,118 @@
+/* HistoryPage.css */
+
+.history-page {
+  position: relative;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+    url('C:\Users\Ma_Aquino\Documents\riceguard-main\frontend\public\bg.jpg') no-repeat center center / cover;
+  overflow-x: hidden;
+}
+
+/* Header */
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.history-logo {
+  height: 60px;
+  border-radius: 50%;
+}
+
+.nav-links button {
+  background: none;
+  border: none;
+  color: #fff;
+  margin-left: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.nav-links button:hover {
+  color: #00e676;
+}
+
+.nav-links button.active {
+  border-bottom: 2px solid #00c853;
+  font-weight: bold;
+}
+
+/* Content */
+.history-content {
+  width: 90%;
+  max-width: 1100px;
+  margin: 2rem auto;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.history-content h2 {
+  text-align: center;
+  color: #00e676;
+  margin-bottom: 1.5rem;
+}
+
+/* Grid layout for cards */
+.history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Card styling */
+.history-card {
+  background: rgba(255, 255, 255, 0.9);
+  color: #1b5e20;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.history-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.history-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 2px solid #1b5e20;
+}
+
+.history-info {
+  padding: 1rem;
+  text-align: left;
+}
+
+.history-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #1b5e20;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.history-info p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* No History */
+.no-history {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #ddd;
+  margin-top: 1rem;
+}

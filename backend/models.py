@@ -1,89 +1,52 @@
-# backend/models.py
-from __future__ import annotations
-from datetime import datetime
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict
 from enum import Enum
+from pydantic import BaseModel, EmailStr, Field
+from datetime import datetime
 
-from pydantic import BaseModel, Field, EmailStr
-from bson import ObjectId
-
-
-# ---- Mongo ObjectId support ----
-class PyObjectId(ObjectId):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-    @classmethod
-    def validate(cls, v):
-        if isinstance(v, ObjectId):
-            return v
-        if not ObjectId.is_valid(v):
-            raise ValueError("Invalid ObjectId")
-        return ObjectId(v)
-    @classmethod
-    def __modify_schema__(cls, field_schema):
-        field_schema.update(type="string")
-
-
-# ---- Enums ----
 class DiseaseKey(str, Enum):
     brown_spot = "brown_spot"
     blast = "blast"
     blight = "blight"
     healthy = "healthy"
 
-
-# ---- Auth ----
+# ---------- Auth DTOs ----------
 class RegisterIn(BaseModel):
-    name: str
+    name: str = Field(..., min_length=1)
     email: EmailStr
-    password: str
+    password: str = Field(..., min_length=6)
 
 class RegisterOut(BaseModel):
     id: str
-    name: str
     email: EmailStr
 
 class LoginIn(BaseModel):
     email: EmailStr
-    password: str
-
-class LoginUser(BaseModel):
-    id: str
-    name: str
-    email: EmailStr
+    password: str = Field(..., min_length=6)
 
 class LoginOut(BaseModel):
     accessToken: str
-    user: LoginUser
+    user: Dict[str, str]
 
-
-# ---- Scans ----
+# ---------- Scan DTOs ----------
 class ScanCreate(BaseModel):
     label: DiseaseKey
-    confidence: Optional[float] = None
-    modelVersion: str
-    notes: Optional[str] = None
+    confidence: float = Field(..., ge=0, le=1)
+    modelVersion: str = Field(..., min_length=1)
+    notes: Optional[str] = Field(default=None, max_length=500)
 
 class ScanItem(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    userId: PyObjectId
+    id: str
     label: DiseaseKey
-    confidence: Optional[float] = None
+    confidence: float
     modelVersion: str
-    notes: Optional[str] = None
+    createdAt: datetime
     imageUrl: Optional[str] = None
-    createdAt: datetime = Field(default_factory=datetime.utcnow)
-
-    class Config:
-        json_encoders = {ObjectId: str}
-        allow_population_by_field_name = True
 
 class ScanListOut(BaseModel):
     items: List[ScanItem]
+    nextCursor: Optional[str] = None
 
-
-# ---- Recommendation ----
+# ---------- Recommendation DTO ----------
 class RecommendationOut(BaseModel):
     diseaseKey: DiseaseKey
     title: str
