@@ -1,7 +1,3 @@
-Here’s a cleaner, tighter README you can drop in as `README.md`. It keeps everything you wrote, but organizes it for faster onboarding and adds the missing “how to run” + env details + endpoints.
-
----
-
 # 🌾 RiceGuard
 
 RiceGuard is a **web + mobile** system that detects and classifies rice leaf diseases from images using **FastAPI**, **MongoDB**, and **TensorFlow**.
