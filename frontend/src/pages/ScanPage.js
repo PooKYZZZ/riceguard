@@ -8,6 +8,7 @@ function ScanPage() {
   const [preview, setPreview] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   // 🧠 Local fallback recommendations (only used if backend doesn’t send one)
   const recommendations = {
@@ -86,9 +87,13 @@ function ScanPage() {
     }
   };
 
-  // 🔙 Navigation buttons
-  const handleBack = () => navigate("/");
   const handleHistory = () => navigate("/history");
+  const openLogout = () => setLogoutOpen(true);
+  const closeLogout = () => setLogoutOpen(false);
+  const confirmLogout = () => {
+    setLogoutOpen(false);
+    navigate("/");
+  };
 
   return (
     <div className="scan-page">
@@ -102,7 +107,7 @@ function ScanPage() {
           />
         </div>
         <nav className="nav-links">
-          <button onClick={handleBack}>Home</button>
+          <button onClick={openLogout}>Log Out</button>
           <button className="active">Scan</button>
           <button onClick={handleHistory}>History</button>
         </nav>
@@ -141,7 +146,8 @@ function ScanPage() {
             onClick={handleUpload}
             disabled={loading || !image}
           >
-            {loading ? "Analyzing..." : "UPLOAD IMAGE"}
+            {loading ? "Analyzing..." : "SCAN IMAGE"}
+            {loading ? "Analyzing..." : "SCAN IMAGE"}
           </button>
 
           {/* ✅ Result Display */}
@@ -159,11 +165,27 @@ function ScanPage() {
         {/* Instruction Box */}
         <div className="instruction-box">
           <p>
-            To begin analysis, upload your rice leaf image. Ensure the photo is
-            clear and well-lit for accurate detection.
+            To begin analysis, upload your rice leaf image and ensure 
           </p>
+          <p>the photo is clear and well-lit for accurate detection.</p>
         </div>
       </div>
+      {logoutOpen && (
+        <div className="modal-backdrop" onClick={closeLogout}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h2>Log out</h2>
+            <p>Are you sure you want to log out?</p>
+            <div className="modal-actions">
+              <button className="btn-outline" type="button" onClick={closeLogout}>
+                Cancel
+              </button>
+              <button className="btn-primary" type="button" onClick={confirmLogout}>
+                Log out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

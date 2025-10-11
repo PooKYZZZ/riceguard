@@ -7,7 +7,7 @@
   color: #fff;
   background:
     linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
-    url('C:\Users\Ma_Aquino\Documents\riceguard-main\frontend\public\bg.jpg') no-repeat center center / cover;
+    url('C:\Users\jabez\Projects\riceguard\frontend\public\bg.jpg') no-repeat center center / cover;
   overflow-x: hidden;
 }
 
@@ -21,28 +21,37 @@
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Place navigation to the left of the logo to match ScanPage */
+.history-header .nav-links {
+  order: 1;
+}
+
+.history-header .logo-section {
+  order: 2;
+}
+
 .history-logo {
   height: 60px;
   border-radius: 50%;
 }
 
 .nav-links button {
-  background: none;
+  background: transparent;
   border: none;
   color: #fff;
-  margin-left: 1rem;
   font-size: 1rem;
+  margin-left: 1.2rem;
   cursor: pointer;
-  transition: color 0.2s ease;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
 }
 
 .nav-links button:hover {
-  color: #00e676;
+  color: #c7ffc9;
 }
 
-.nav-links button.active {
-  border-bottom: 2px solid #00c853;
-  font-weight: bold;
+.nav-links .active {
+  color: #00ff7f;
 }
 
 /* Content */
@@ -56,6 +65,66 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
+/* Toolbar with title left and search on the right */
+.history-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.history-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-search {
+  width: 280px;
+  max-width: 45%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.9);
+  color: #1b5e20;
+}
+
+/* Restore caret visibility for the search input */
+.history-page .history-search {
+  caret-color: #1b5e20;
+}
+
+.select-all span {
+  margin-left: 0.35rem;
+}
+
+.history-controls button.danger {
+  background: #b71c1c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.history-controls button.danger:disabled {
+  background: rgba(183, 28, 28, 0.5);
+  cursor: not-allowed;
+}
+
+.history-controls button.danger:hover:not(:disabled) {
+  background: #d32f2f;
+}
+
+.history-card .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.5rem 0.75rem 0 0.75rem;
+}
+
 .history-content h2 {
   text-align: center;
   color: #00e676;
@@ -67,6 +136,10 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.5rem;
+  /* Make history list scrollable within the content box */
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 0.25rem; /* avoid scrollbar overlap */
 }
 
 /* Card styling */
@@ -115,4 +188,14 @@
   font-size: 1.2rem;
   color: #ddd;
   margin-top: 1rem;
+}
+
+/* Hide text caret to remove blinking cursor */
+.history-page, .history-page * {
+  caret-color: transparent;
+}
+
+/* Smaller modal width on History page */
+.history-page .modal {
+  width: min(400px, 90%);
 }

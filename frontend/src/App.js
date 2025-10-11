@@ -15,7 +15,6 @@ function App() {
   const [signupOpen, setSignupOpen] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [signupUser, setSignupUser] = useState('');
   const [signupPass, setSignupPass] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupConfirm, setSignupConfirm] = useState('');
@@ -37,7 +36,6 @@ function App() {
 
   function closeSignup() {
     setSignupOpen(false);
-    setSignupUser('');
     setSignupPass('');
     setSignupEmail('');
     setSignupConfirm('');
@@ -63,7 +61,7 @@ function App() {
       return;
     }
 
-    console.log('Signup submit', { signupUser, signupEmail, signupPass });
+    console.log('Signup submit', { signupEmail, signupPass });
     closeSignup();
   }
 
@@ -120,9 +118,10 @@ function App() {
             <h2>Log in</h2>
             <form onSubmit={submitLogin}>
               <div className="field">
-                <span className="label-text">Username</span>
+                <span className="label-text">Email</span>
                 <input
-                  id="username"
+                  id="loginEmail"
+                  type="email"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
@@ -164,15 +163,7 @@ function App() {
             </div>
             <h2>Sign Up</h2>
             <form onSubmit={submitSignup}>
-              <div className="field">
-                <span className="label-text">Username</span>
-                <input
-                  id="signupUser"
-                  value={signupUser}
-                  onChange={(e) => setSignupUser(e.target.value)}
-                  required
-                />
-              </div>
+              {/** Username removed for signup **/}
               <div className="field">
                 <span className="label-text">Email</span>
                 <input
