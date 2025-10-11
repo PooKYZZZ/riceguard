@@ -1,41 +1,51 @@
+# backend/security.py
 from datetime import datetime, timedelta, timezone
-from typing import Optional
-import jwt
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from typing import Optional, Dict, Any, Tuple
+from jose import jwt, JWTError
 from passlib.context import CryptContext
 from settings import JWT_SECRET, JWT_ALGORITHM, TOKEN_EXPIRE_HOURS
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-http_bearer = HTTPBearer(auto_error=False)
+# Use bcrypt_sha256 to avoid 72-byte password issues
+pwd_context = CryptContext(schemes=["bcrypt_sha256"], deprecated="auto")
 
+# -------------------- PASSWORD UTILS --------------------
 def hash_password(password: str) -> str:
-    if len(password) < 6:
-        raise HTTPException(status_code=422, detail="Password too short (min 6 chars)")
+    """Hash a plaintext password securely."""
     return pwd_context.hash(password)
 
-def verify_password(password: str, password_hash: str) -> bool:
-    try:
-        return pwd_context.verify(password, password_hash)
-    except Exception:
-        return False
+def verify_password(plain: str, hashed: str) -> bool:
+    """Verify a plaintext password against its hash."""
+    return pwd_context.verify(plain, hashed)
 
-def create_access_token(sub: str) -> str:
+# -------------------- TOKEN UTILS --------------------
+def create_access_token(
+    subject: str,
+    extra_claims: Optional[Dict[str, Any]] = None,
+) -> Tuple[str, datetime]:
+    """
+    Create a JWT access token.
+    - subject: user ID (stored as 'sub')
+    - extra_claims: optional dict with email, name, etc.
+    Returns: (token, expires_at)
+    """
     now = datetime.now(timezone.utc)
-    exp = now + timedelta(hours=TOKEN_EXPIRE_HOURS)
-    payload = {"sub": sub, "iat": int(now.timestamp()), "exp": int(exp.timestamp())}
-    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    expire = now + timedelta(hours=TOKEN_EXPIRE_HOURS)
+    to_encode = {
+        "sub": subject,
+        "iat": int(now.timestamp()),
+        "exp": int(expire.timestamp()),
+    }
+    if extra_claims:
+        to_encode.update(extra_claims)
 
-def decode_access_token(token: str) -> dict:
+    token = jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    return token, expire
+
+
+def decode_token(token: str) -> Dict[str, Any]:
+    """Decode and validate a JWT token."""
     try:
-        return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-def require_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(http_bearer)) -> str:
-    if creds is None or creds.scheme.lower() != "bearer":
-        raise HTTPException(status_code=401, detail="Missing Bearer token")
-    payload = decode_access_token(creds.credentials)
-    return payload.get("sub")
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return payload
+    except JWTError as e:
+        raise ValueError(f"Invalid token: {e}")

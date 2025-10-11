@@ -1,3 +1,4 @@
+# models.py
 from typing import Optional, List, Dict
 from enum import Enum
 from pydantic import BaseModel, EmailStr, Field
@@ -17,15 +18,21 @@ class RegisterIn(BaseModel):
 
 class RegisterOut(BaseModel):
     id: str
+    name: str
     email: EmailStr
 
 class LoginIn(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=6)
 
+class LoginUser(BaseModel):
+    id: str
+    name: str
+    email: EmailStr
+
 class LoginOut(BaseModel):
     accessToken: str
-    user: Dict[str, str]
+    user: LoginUser
 
 # ---------- Scan DTOs ----------
 class ScanCreate(BaseModel):
@@ -41,6 +48,7 @@ class ScanItem(BaseModel):
     modelVersion: str
     createdAt: datetime
     imageUrl: Optional[str] = None
+    notes: Optional[str] = None
 
 class ScanListOut(BaseModel):
     items: List[ScanItem]
@@ -53,3 +61,4 @@ class RecommendationOut(BaseModel):
     steps: List[str]
     version: str
     updatedAt: datetime
+    
