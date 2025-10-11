@@ -65,6 +65,66 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
+/* Toolbar with title left and search on the right */
+.history-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.history-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-search {
+  width: 280px;
+  max-width: 45%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.9);
+  color: #1b5e20;
+}
+
+/* Restore caret visibility for the search input */
+.history-page .history-search {
+  caret-color: #1b5e20;
+}
+
+.select-all span {
+  margin-left: 0.35rem;
+}
+
+.history-controls button.danger {
+  background: #b71c1c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.history-controls button.danger:disabled {
+  background: rgba(183, 28, 28, 0.5);
+  cursor: not-allowed;
+}
+
+.history-controls button.danger:hover:not(:disabled) {
+  background: #d32f2f;
+}
+
+.history-card .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.5rem 0.75rem 0 0.75rem;
+}
+
 .history-content h2 {
   text-align: center;
   color: #00e676;
@@ -76,6 +136,10 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.5rem;
+  /* Make history list scrollable within the content box */
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 0.25rem; /* avoid scrollbar overlap */
 }
 
 /* Card styling */

@@ -87,7 +87,6 @@ function ScanPage() {
     }
   };
 
-  // 🔙 Navigation buttons
   const handleHistory = () => navigate("/history");
   const openLogout = () => setLogoutOpen(true);
   const closeLogout = () => setLogoutOpen(false);
@@ -147,7 +146,8 @@ function ScanPage() {
             onClick={handleUpload}
             disabled={loading || !image}
           >
-            {loading ? "Analyzing..." : "UPLOAD IMAGE"}
+            {loading ? "Analyzing..." : "SCAN IMAGE"}
+            {loading ? "Analyzing..." : "SCAN IMAGE"}
           </button>
 
           {/* ✅ Result Display */}
@@ -171,7 +171,7 @@ function ScanPage() {
         </div>
       </div>
       {logoutOpen && (
-        <div className="modal-backdrop">
+        <div className="modal-backdrop" onClick={closeLogout}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h2>Log out</h2>
             <p>Are you sure you want to log out?</p>
@@ -191,4 +191,3 @@ function ScanPage() {
 }
 
 export default ScanPage;
-
