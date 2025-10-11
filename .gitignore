@@ -1,1 +1,90 @@
-ml/model.h5
+# =========================================================
+# RiceGuard Project .gitignore
+# (Backend: FastAPI + MongoDB + ML)
+# (Frontend: React / Vite)
+# =========================================================
+
+# -----------------------------
+# 🧠 Python & FastAPI backend
+# -----------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.log
+*.pid
+*.sqlite3
+*.db
+*.db-journal
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Byte-compiled / optimized / DLL files
+*.so
+*.dll
+*.dylib
+
+# Build & packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+MANIFEST
+
+# IDE settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment & secrets
+.env
+.env.*
+*.secret
+secrets.json
+
+# Uploads / runtime files
+uploads/
+history.json
+/tmp/
+temp/
+__uploads__/
+*.h5
+*.tflite
+*.ckpt
+*.weights
+
+# Node modules (frontend)
+node_modules/
+
+# React / Vite build output
+frontend/build/
+frontend/dist/
+frontend/.env.local
+frontend/.env.production
+frontend/.env.development
+
+# Misc cache
+*.cache
+.DS_Store
+Thumbs.db
+
+# Coverage / testing
+.coverage
+htmlcov/
+pytest_cache/
+__snapshots__/
+
+# Logs
+*.log
+logs/
+log/
+
+# OS junk
+ehthumbs.db
+Icon?
+desktop.ini
