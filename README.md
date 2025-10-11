@@ -1,88 +1,81 @@
-# 🌾 RiceGuard
+# RiceGuard
 
-RiceGuard is a monorepo for Team&nbsp;27’s multi-platform solution that detects rice leaf diseases from images. The project combines a React web app, a React Native mobile app, and a FastAPI backend that serves a TensorFlow model, all backed by MongoDB Atlas.
+RiceGuard is Team 27's multi-platform solution for detecting rice leaf diseases from images. The monorepo bundles a FastAPI backend, a React web portal, and a React Native companion app that share a TensorFlow model and MongoDB Atlas datastore.
 
 ---
 
-## 📚 Academic Context
+## Academic Context
 
 | Track | Course | Section |
-|-------|--------|---------|
-| Web application | CPE025 – Software Design | CPE41S4 |
-| Mobile application | CPE026 – Emerging Technologies 3 | CPE41S4 |
+| --- | --- | --- |
+| Web application | CPE025 - Software Design | CPE41S4 |
+| Mobile application | CPE026 - Emerging Technologies 3 | CPE41S4 |
 
-**Advisers:** Engr. Neal Barton James Matira (Software Design), Engr. Robin Valenzuela (Emerging Technologies 3)
+**Advisers:** Engr. Neal Barton James Matira (Software Design) and Engr. Robin Valenzuela (Emerging Technologies 3)
 
 ---
 
-## 📁 Repository Structure
+## Tech Stack
+
+| Layer | Technologies |
+| --- | --- |
+| Backend | FastAPI, Starlette, Uvicorn, Pydantic, python-jose, passlib, pymongo |
+| Frontend | React, React Router DOM, Axios, Tailwind CSS (optional) |
+| Mobile | React Native (Expo), TensorFlow Lite |
+| ML | TensorFlow/Keras, NumPy, Pillow |
+| Infrastructure | MongoDB Atlas, JWT auth, local uploads storage |
+
+---
+
+## Repository Layout
 
 ```
 riceguard/
-├─ backend/        # FastAPI API (auth, scans, recommendations, uploads)
-├─ frontend/       # React web application
-└─ ml/             # Shared ML artifacts (model.h5 / model.tflite, preprocessing helpers)
+|- backend/   # FastAPI API, auth, scan history, recommendations
+|- frontend/  # React web interface for uploads and history
+|- ml/        # Shared ML artifacts and preprocessing helpers
 ```
 
-### Backend Highlights
-- FastAPI + Starlette + Uvicorn
-- JWT authentication (python-jose + passlib)
-- MongoDB Atlas using pymongo
-- Image uploads persisted locally (configurable `UPLOAD_DIR`)
-- TensorFlow inference via `ml/model.h5`
-
-### Frontend Highlights
-- React + react-router DOM
-- Fetches API through `frontend/src/api.js`
-- Handles scan upload, history browsing, and recommendations
-
-### Mobile Highlights (React Native / Expo)
-- Uses TensorFlow Lite (`ml/model.tflite`) for on-device inference
-- Provides offline predictions, optional sync with backend
+Highlights
+- Backend: classification service, JWT-secured endpoints, MongoDB persistence, static upload hosting.
+- Frontend: scan uploader, history dashboard, treatment recommendations.
+- Mobile: offline TFLite inference with optional backend sync.
 
 ---
 
-## 🚀 Quick Start
+## Getting Started
 
-### 1. Backend API
+### Backend API
 
 ```bash
 cd backend
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1  # PowerShell
-# source .venv/bin/activate     # macOS/Linux
+.\\.venv\\Scripts\\Activate.ps1  # Windows PowerShell
 pip install -r requirements.txt
 ```
 
-Create `backend/.env` (never commit this file):
+Create `backend/.env` (keep out of Git):
 
 ```env
 MONGO_URI=mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/riceguard_db
 DB_NAME=riceguard_db
-
 JWT_SECRET=CHANGE_ME_SUPER_SECRET
 JWT_ALGORITHM=HS256
 TOKEN_EXPIRE_HOURS=6
-
 UPLOAD_DIR=uploads
 MAX_UPLOAD_MB=8
-
 ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173
 ```
 
-Place the trained model at `backend/ml/model.h5` (ignore in Git).
-
-Run the server:
+Place the trained TensorFlow model at `backend/ml/model.h5` (ignored by Git) and run:
 
 ```bash
 uvicorn main:app --reload --port 8000
 ```
 
-* Health check: <http://127.0.0.1:8000/health>
-* OpenAPI docs: <http://127.0.0.1:8000/docs>
-* Uploaded images served from `/uploads/...`
+Health check: `http://127.0.0.1:8000/health` | API docs: `http://127.0.0.1:8000/docs`
 
-### 2. Frontend Web App
+### Frontend Web App
 
 ```bash
 cd frontend
@@ -95,16 +88,9 @@ Create `frontend/.env`:
 REACT_APP_API_URL=http://127.0.0.1:8000/api/v1
 ```
 
-Start the dev server:
+Start the dev server with `npm start` and open `http://localhost:3000`.
 
-```bash
-npm start
-```
-
-* App runs on <http://localhost:3000>
-* Uses the backend hosted at `http://127.0.0.1:8000/api/v1`
-
-### 3. Mobile App (React Native / Expo)
+### Mobile App (Expo)
 
 ```bash
 cd mobileapp
@@ -112,48 +98,37 @@ npm install
 npx expo start
 ```
 
-Configure the app to load `ml/model.tflite` for offline inference. The mobile client can authenticate with the backend for syncing history.
+Bundle `ml/model.tflite` for on-device inference. Devices can authenticate with the backend to sync scan history.
 
 ---
 
-## 🔌 Core API Overview
+## API Highlights
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/v1/auth/register` | Create user account |
-| `POST` | `/api/v1/auth/login` | Obtain `{ accessToken, expiresAt, user }` |
-| `POST` | `/api/v1/scans` | Multipart upload (`file`, `notes`, `modelVersion`) → classify + persist |
-| `GET`  | `/api/v1/scans` | List scans for the authenticated user |
-| `GET`  | `/api/v1/recommendations/{diseaseKey}` | Retrieve treatment steps |
+| --- | --- | --- |
+| `POST` | `/api/v1/auth/register` | Create a user account |
+| `POST` | `/api/v1/auth/login` | Returns `{ accessToken, expiresAt, user }` |
+| `POST` | `/api/v1/scans` | Multipart upload (`file`, `notes`, `modelVersion`) -> classify and persist |
+| `GET` | `/api/v1/scans` | Fetch scans for the authenticated user |
+| `GET` | `/api/v1/recommendations/{diseaseKey}` | Retrieve treatment guidance |
 
-Include `Authorization: Bearer <accessToken>` for protected routes.
-
----
-
-## 🧠 ML Notes
-
-- Training occurs in TensorFlow; export both `.h5` (backend) and `.tflite` (mobile).
-- Keep preprocessing consistent between training and inference (`ml_service.py`).
-- Large models are distributed externally—never commit them.
+Add `Authorization: Bearer <accessToken>` to protected requests.
 
 ---
 
-## 🔐 Security & Collaboration Tips
+## ML Workflow
 
-- `.env`, models, and private keys must stay out of version control.
-- Use MongoDB Atlas project access and IP whitelisting for teammates.
-- For development, temporary `0.0.0.0/0` access may be used but remove it afterward.
-- Keep personal branches for experimental features; merge via PR.
+- Train in TensorFlow/Keras; export `.h5` for the backend and `.tflite` for mobile.
+- Keep preprocessing consistent between training and inference (`backend/ml_service.py`).
+- Large binaries (`model.h5`, `.tflite`) are distributed externally and must remain untracked.
 
 ---
 
-## 👥 Team 27 – CPE41S4
+## Team 27 - CPE41S4
 
-- **Mark Angelo Aquino** — Team Leader
-- **Faron Jabez Nonan** — Frontend Developer
-- **Froilan Gayao** — Backend Developer
-- **Eugene Dela Cruz** — ML Engineer
+- **Mark Angelo Aquino** - Team Leader
+- **Faron Jabez Nonan** - Frontend Developer
+- **Froilan Gayao** - Backend Developer
+- **Eugene Dela Cruz** - ML Engineer
 
-**Advisers:** Engr. Neal Barton James Matira (Software Design), Engr. Robin Valenzuela (Emerging Technologies 3)
-
-> For academic use in CPE025 (Software Design) and CPE026 (Emerging Technologies 3).
+> Academic project for CPE025 (Software Design) and CPE026 (Emerging Technologies 3).
