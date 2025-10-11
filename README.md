@@ -11,7 +11,7 @@ RiceGuard is a monorepo for Team&nbsp;27’s multi-platform solution that detect
 | Web application | CPE025 – Software Design | CPE41S4 |
 | Mobile application | CPE026 – Emerging Technologies 3 | CPE41S4 |
 
-**Adviser:** Engr. Robin Valenzuela
+**Advisers:** Engr. Neal Barton James Matira (Software Design), Engr. Robin Valenzuela (Emerging Technologies 3)
 
 ---
 
@@ -154,6 +154,6 @@ Include `Authorization: Bearer <accessToken>` for protected routes.
 - **Froilan Gayao** — Backend Developer
 - **Eugene Dela Cruz** — ML Engineer
 
-**Adviser:** Engr. Robin Valenzuela
+**Advisers:** Engr. Neal Barton James Matira (Software Design), Engr. Robin Valenzuela (Emerging Technologies 3)
 
 > For academic use in CPE025 (Software Design) and CPE026 (Emerging Technologies 3).
