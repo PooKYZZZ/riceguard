@@ -160,28 +160,9 @@ function App() {
 
       {route === 'home' ? (
         <Home />
-      ) : route === 'history' ? (
-        <div className="content">
-          <h2 style={{ color: 'white' }}>History (placeholder)</h2>
-          <p style={{ color: 'white' }}>No history view implemented yet.</p>
-        </div>
       ) : (
       <div className="content">
         <img src={logoUrl} alt="logo" className="logo" />
-
-        <div className="logo-actions">
-          <Button variant="outline" onClick={() => setRoute('home')}>Home</Button>
-          <Button variant="outline" onClick={() => setRoute('history')}>History</Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              localStorage.clear();
-              window.location.reload();
-            }}
-          >
-            Logout
-          </Button>
-        </div>
 
         {localStorage.getItem('rg_user') ? (
           <>
