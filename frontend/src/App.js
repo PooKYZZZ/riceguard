@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Button from './components/button';
+import Home from './components/pages/home';
 
 function App() {
   // --- CONFIG ---
@@ -15,6 +16,7 @@ function App() {
   // --- UI STATE ---
   const [loginOpen, setLoginOpen] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
+  const [route, setRoute] = useState('main');
 
   // login
   const [loginEmail, setLoginEmail] = useState('');
@@ -151,10 +153,71 @@ function App() {
   // ---------------- RENDER ----------------
   return (
     <div className="App">
+      <div className="top-nav">
+        <Button variant="outline" onClick={() => setRoute('home')}>Home</Button>
+      </div>
       <img src={bgUrl} alt="background" className="bg-image" />
 
+      {route === 'home' ? (
+        <Home />
+      ) : route === 'history' ? (
+        <div className="content">
+          <h2 style={{ color: 'white' }}>History (placeholder)</h2>
+          <p style={{ color: 'white' }}>No history view implemented yet.</p>
+        </div>
+      ) : (
       <div className="content">
         <img src={logoUrl} alt="logo" className="logo" />
+
+<<<<<<< HEAD
+        {localStorage.getItem('rg_user') ? (
+          <>
+            <p className="tagline">
+              Welcome back,{' '}
+              {JSON.parse(localStorage.getItem('rg_user')).name ||
+                JSON.parse(localStorage.getItem('rg_user')).email}
+              !
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => {
+                localStorage.clear();
+                window.location.reload();
+              }}
+            >
+              Log out
+            </Button>
+          </>
+        ) : (
+          <>
+            <p className="tagline">
+              We're here to guide you — Your Smart Companion for Healthy Rice Fields
+            </p>
+            <div className="actions">
+              <Button variant="outline" onClick={openLogin}>
+                Log in
+              </Button>
+              <Button variant="primary" onClick={openSignup}>
+                Sign Up
+              </Button>
+            </div>
+          </>
+        )}
+
+=======
+        <div className="logo-actions">
+          <Button variant="outline" onClick={() => setRoute('home')}>Home</Button>
+          <Button variant="outline" onClick={() => setRoute('history')}>History</Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              localStorage.clear();
+              window.location.reload();
+            }}
+          >
+            Logout
+          </Button>
+        </div>
 
         {localStorage.getItem('rg_user') ? (
           <>
@@ -190,13 +253,16 @@ function App() {
           </>
         )}
 
+>>>>>>> 29e2dda8098aebbeb1130ef77f899e1273300065
         {/* Shared auth error */}
         {authError && (
           <div style={{ color: '#b91c1c', marginTop: '0.5rem' }}>{authError}</div>
         )}
-      </div>
+  </div>
 
-      {loginOpen && (
+  )}
+
+  {loginOpen && (
         <div className="modal-backdrop" onClick={closeLogin}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-avatar-wrap">
