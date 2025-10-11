@@ -1,109 +1,173 @@
 # 🌾 RiceGuard
 
-**RiceGuard** is an integrated software system designed to detect and classify rice leaf diseases using image processing and machine learning.  
-It consists of both a **Web Application** and a **Mobile Application**, developed under two related courses to serve different use cases:  
-- The **Web Application** focuses on cloud-based data access, management, and user interface design (for **Software Design – CPE025**).  
-- The **Mobile Application** focuses on on-site, offline-ready disease detection and usability in the field (for **Mobile Development / Capstone**).
+RiceGuard is a **web + mobile** system that detects and classifies rice leaf diseases from images using **FastAPI**, **MongoDB**, and **TensorFlow**.
+It supports two parallel tracks:
 
-Together, they aim to assist farmers and agricultural experts in early disease detection and proper treatment planning.
+* **Web App (CPE025 – Software Design):** cloud inference, management UI.
+* **Mobile App (Capstone / Mobile Dev):** offline, on-device inference (TFLite).
 
 ---
 
-## 📂 Project Structure
+## 📦 Monorepo Layout
+
 ```
 riceguard/
-├── backend/     → FastAPI + MongoDB server (handles authentication, scans, and recommendations)
-├── frontend/    → Web interface (React / JavaScript)
-└── ml/          → Machine Learning model (TensorFlow / TensorFlow Lite)
+├─ backend/        # FastAPI API (auth, scans, recommendations, uploads)
+├─ frontend/       # React web app
+└─ ml/             # ML assets (model.h5 / model.tflite, helpers)
 ```
 
 ---
 
 ## 🧩 Tech Stack
-| Layer | Tools / Frameworks |
-|-------|--------------------|
-| **Frontend (Web)** | React, JavaScript, Figma (UI Design) |
-| **Frontend (Mobile)** | React Native (Expo), JavaScript |
-| **Backend** | FastAPI (Python), MongoDB |
-| **Machine Learning** | TensorFlow / TensorFlow Lite |
-| **Authentication** | JWT (JSON Web Token) |
-| **Storage** | MongoDB (Cloud), SQLite (Local Offline History) |
+
+| Layer          | Tools                        |
+| -------------- | ---------------------------- |
+| Frontend (Web) | React, JavaScript            |
+| Mobile         | React Native (Expo), TFLite  |
+| Backend        | FastAPI, Starlette, Pydantic |
+| Database       | MongoDB Atlas                |
+| Auth           | JWT                          |
+| ML             | TensorFlow / TensorFlow Lite |
 
 ---
 
-## 🌐 Web Application (Software Design)
-The web app provides a centralized platform for farmers and agricultural staff to analyze rice leaf images online.
+## ⚙️ Prerequisites
 
-### ✳️ Features
-- Upload and analyze rice leaf images through the web interface  
-- Automatic classification (e.g., *Brown Spot*, *Bacterial Blight*, *Healthy*)  
-- Confidence score and visual diagnostic results  
-- Display of treatment recommendations  
-- User authentication (login/register)  
-- History log of previous analyses  
-
-### 🧰 Setup
-1. Navigate to the backend folder  
-   `cd backend`  
-   Install dependencies:  
-   `pip install -r requirements.txt`  
-   Run server:  
-   `uvicorn main:app --reload`
-
-2. Navigate to the frontend folder  
-   `cd frontend`  
-   Install dependencies:  
-   `npm install`  
-   Start web app:  
-   `npm start`
-
-Access via **http://localhost:3000**  
-API runs on **http://localhost:8000**
+* **Python** 3.10–3.11
+* **Node** 18+ / **npm** 9+
+* **MongoDB Atlas** connection string (SRV)
+* (Optional) **Git** + VS Code
 
 ---
 
-## 📱 Mobile Application (Capstone / Mobile Development)
-The mobile app provides **offline functionality**, allowing farmers to capture and analyze rice leaf images directly in the field — even without an internet connection.
+## 🚀 Quick Start
 
-### ✳️ Features
-- Camera-based image capture and preview  
-- On-device disease detection using a TensorFlow Lite model  
-- Instant diagnosis and confidence score display  
-- Recommended treatments and actions  
-- History storage using local SQLite  
-- Synchronization with cloud when internet becomes available  
+### 1) Backend (API)
 
-### 🧰 Setup
-1. Navigate to the mobile app folder  
-   `cd frontend` (if shared) or `cd mobile` (if separated)  
-2. Install dependencies  
-   `npm install`  
-3. Run with Expo  
-   `npx expo start`  
-4. Scan the QR code to open on your Android device
+```bash
+cd backend
+
+# (recommended) create a venv
+python -m venv .venv
+# Windows PowerShell
+.\.venv\Scripts\Activate.ps1
+# macOS/Linux
+# source .venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+Create `backend/.env`:
+
+```env
+MONGO_URI=mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/riceguard_db
+DB_NAME=riceguard_db
+
+JWT_SECRET=CHANGE_ME_SUPER_SECRET
+JWT_ALGORITHM=HS256
+TOKEN_EXPIRE_HOURS=6
+
+UPLOAD_DIR=uploads
+MAX_UPLOAD_MB=8
+
+# React dev servers
+ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173
+```
+
+Place the ML model:
+
+```
+backend/
+  ml/
+    model.h5         # not committed
+    service.py       # ML loader + predict()
+```
+
+Run the API:
+
+```bash
+uvicorn main:app --reload --port 8000
+```
+
+* Health: `http://127.0.0.1:8000/health`
+* Docs: `http://127.0.0.1:8000/docs`
+* Uploads served at: `/uploads/...`
 
 ---
 
-## 🧠 Machine Learning Model
-The ML model is trained using TensorFlow and converted to TensorFlow Lite for mobile use.  
-It classifies rice leaves into categories:
-- **Healthy**
-- **Brown Spot**
-- **Bacterial Blight**
+### 2) Frontend (Web)
 
-Model files (`.h5`, `.tflite`) are located in the `ml/` directory and integrated into both the backend (for web inference) and mobile app (for offline inference).
+```bash
+cd frontend
+npm install
+```
+
+Create `frontend/.env`:
+
+```env
+REACT_APP_API_URL=http://127.0.0.1:8000/api/v1
+```
+
+Run:
+
+```bash
+npm start
+```
+
+* Web App: `http://localhost:3000`
+* API Base: `http://127.0.0.1:8000/api/v1`
+
+---
+
+## 🔌 Core API (minimal)
+
+* `POST /api/v1/auth/register` – create user
+* `POST /api/v1/auth/login` – returns `{ accessToken, user }`
+* `GET  /api/v1/auth/me` – (optional) validate token
+* `POST /api/v1/scans` – **multipart** upload (`file`, `notes`, `modelVersion`) → predicts & stores scan
+* `GET  /api/v1/scans` – list user’s scans (Bearer token)
+* `GET  /api/v1/recommendations/{diseaseKey}` – steps for `brown_spot | blast | blight | healthy`
+
+> **Auth:** Send `Authorization: Bearer <accessToken>` for protected routes.
+
+---
+
+## 📱 Mobile (Outline)
+
+```bash
+# if mobile is a separate app
+cd mobile
+npm install
+npx expo start
+```
+
+* Uses **TFLite** model (`ml/model.tflite`) for offline inference.
+* Stores history locally (e.g., SQLite); can sync to backend.
+
+---
+
+## 🧠 ML Notes
+
+* Training in TensorFlow → export **`model.h5`** (backend inference) and **`.tflite`** (mobile).
+* Do **not** commit large models. Share via Drive and place under `backend/ml/`.
+
+---
+
+## 🔐 Security & Dev Tips
+
+* Never commit `.env`, tokens, or `ml/model.h5`.
+* In Atlas, add teammates under **Project Access**, whitelist IPs under **Network Access**, and create DB users per teammate.
+* For dev, you may temporarily allow `0.0.0.0/0` (not for production).
 
 ---
 
 ## 👥 Team 27 – CpE41S4
-- **Mark Angelo Aquino** — Team Leader  
-- **Faron Jabez Nonan** — Frontend Developer  
-- **Froilan Gayao** — Backend Developer  
-- **Eugene Dela Cruz** — Machine Learning Engineer  
 
----
+* **Mark Angelo Aquino** — Team Leader
+* **Faron Jabez Nonan** — Frontend Developer
+* **Froilan Gayao** — Backend Developer
+* **Eugene Dela Cruz** — ML Engineer
 
-## 🧾 License
-Developed for **Software Design (CPE025)** under **Engr. Neal Barton James Matira**  
-and extended for **Mobile Application Development / Capstone Project**.  
-For educational use only.
+**Adviser:** Engr. Neal Barton James Matira
+*For educational use (CPE025: Software Design; Capstone/Mobile Dev).*
