@@ -10,6 +10,7 @@ from pymongo import DESCENDING
 from db import get_db, as_object_id
 from security import hash_password, verify_password, create_access_token, decode_token
 from storage import save_upload, ensure_upload_dir
+from ml_service import predict_image  # ✅ NEW — ML integration
 
 from models import (
     RegisterIn, RegisterOut,
@@ -22,6 +23,9 @@ router = APIRouter()
 bearer = HTTPBearer(auto_error=False)
 
 
+# =========================================================
+#                    AUTH HELPERS
+# =========================================================
 def require_user(creds: Optional[HTTPAuthorizationCredentials]) -> dict:
     if not creds:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing Authorization header")
@@ -73,38 +77,42 @@ def login(body: LoginIn):
 # =========================================================
 @router.post("/scans", response_model=ScanItem, tags=["scans"])
 def create_scan(
-    label: DiseaseKey = Form(...),
-    confidence: float = Form(...),
-    modelVersion: str = Form(...),
+    file: UploadFile = File(...),              # ✅ Now image required
     notes: Optional[str] = Form(None),
-    file: Optional[UploadFile] = File(None),
+    modelVersion: str = Form("1.0"),
     creds: HTTPAuthorizationCredentials = Depends(bearer),
 ):
+    """Upload a rice leaf image -> classify -> save scan in DB."""
     user_claims = require_user(creds)
     user_id = user_claims["sub"]
 
     db = get_db()
     ensure_upload_dir()
 
-    image_url: Optional[str] = None
-    if file:
-        image_path = save_upload(file)  # e.g., uploads/2025/10/<uuid>.jpg
-        image_url = image_path  # served via /uploads
+    # ✅ Save the uploaded image
+    image_path = save_upload(file)  # e.g., uploads/2025/10/<uuid>.jpg
 
+    # ✅ Run ML prediction
+    try:
+        label_str, confidence = predict_image(image_path)
+        label = DiseaseKey(label_str)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Model inference error: {e}")
+
+    # ✅ Save record to MongoDB
     doc = {
         "userId": as_object_id(user_id),
         "label": label.value,
-        "confidence": float(confidence) if confidence is not None else None,
+        "confidence": float(confidence),
         "modelVersion": modelVersion,
         "notes": notes,
-        "imageUrl": image_url,
+        "imageUrl": image_path,
         "createdAt": datetime.now(timezone.utc),
     }
     res = db.scans.insert_one(doc)
     inserted = db.scans.find_one({"_id": res.inserted_id})
-
-    # adapt to response model
     inserted["label"] = DiseaseKey(inserted["label"])
+
     return ScanItem(**inserted)
 
 
@@ -130,7 +138,6 @@ def list_scans(
 @router.get("/recommendations/{diseaseKey}", response_model=RecommendationOut, tags=["recommendations"])
 def get_recommendation(diseaseKey: DiseaseKey):
     db = get_db()
-    # seed.py uses { title, steps, version, updatedAt } keyed by diseaseKey
     doc = db.recommendations.find_one({"diseaseKey": diseaseKey.value})
     if not doc:
         raise HTTPException(status_code=404, detail="Recommendation not found")
@@ -142,3 +149,4 @@ def get_recommendation(diseaseKey: DiseaseKey):
         version=doc["version"],
         updatedAt=doc["updatedAt"],
     )
+# backend/models.py
