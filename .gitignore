@@ -69,3 +69,4 @@ ml/model.h5
 ml/**/*.ckpt
 ml/output/
 ml/tmp/
+backend/uploads/2025-*/
