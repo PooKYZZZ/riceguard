@@ -46,3 +46,14 @@ def health():
 
 # ---------------------- ROUTERS -----------------------
 app.include_router(api_router, prefix="/api/v1")
+
+
+# NOTE: allow_credentials must be False when using "*" in Starlette.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],      # DEV ONLY
+    allow_credentials=False,  # IMPORTANT with "*" origins
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+print("[CORS] DEV: allow_origins='*', allow_credentials=False")

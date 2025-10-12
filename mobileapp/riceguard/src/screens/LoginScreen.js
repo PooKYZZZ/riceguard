@@ -1,37 +1,96 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ImageBackground, Modal, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, ImageBackground, Modal, TextInput, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import Button from '../components/Button';
 import { fonts } from '../theme/typography';
+import { loginUser, registerUser } from '../api';
+import { useAuth } from '../context/AuthContext';
 
 export default function LoginScreen({ navigation }) {
+  const { token, setAuth } = useAuth();
   const [loginOpen, setLoginOpen] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPass, setSignupPass] = useState('');
   const [signupConfirm, setSignupConfirm] = useState('');
   const [signupError, setSignupError] = useState('');
+  const [signupLoading, setSignupLoading] = useState(false);
 
-  const openLogin = () => setLoginOpen(true);
-  const closeLogin = () => { setLoginOpen(false); setUsername(''); setPassword(''); };
-  const openSignup = () => setSignupOpen(true);
-  const closeSignup = () => { setSignupOpen(false); setSignupEmail(''); setSignupPass(''); setSignupConfirm(''); setSignupError(''); };
+  useEffect(() => {
+    if (token) {
+      navigation.replace('Scan');
+    }
+  }, [token, navigation]);
 
-  const submitLogin = () => {
-    // Hook up with real auth if needed. For now, just navigate
-    closeLogin();
-    navigation.replace('Scan');
+  const openLogin = () => {
+    setLoginError('');
+    setLoginOpen(true);
+  };
+  const closeLogin = () => {
+    setLoginOpen(false);
+    setUsername('');
+    setPassword('');
+    setLoginError('');
+    setLoginLoading(false);
+  };
+  const openSignup = () => {
+    setSignupError('');
+    setSignupOpen(true);
+  };
+  const closeSignup = () => {
+    setSignupOpen(false);
+    setSignupEmail('');
+    setSignupPass('');
+    setSignupConfirm('');
+    setSignupError('');
+    setSignupLoading(false);
   };
 
-  const submitSignup = () => {
+  const submitLogin = async () => {
+    const email = username.trim();
+    if (!email || !password) {
+      setLoginError('Email and password are required.');
+      return;
+    }
+    setLoginError('');
+    try {
+      setLoginLoading(true);
+      const data = await loginUser({ email, password });
+      setAuth({ token: data.accessToken, user: data.user, expiresAt: data.expiresAt });
+      closeLogin();
+      navigation.replace('Scan');
+    } catch (err) {
+      const message = err?.message || 'Failed to log in. Please try again.';
+      setLoginError(message);
+      Alert.alert('Login failed', message);
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  const submitSignup = async () => {
     setSignupError('');
     const email = signupEmail.trim();
     const emailRegex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
     if (!emailRegex.test(email)) return setSignupError('Please enter a valid email address.');
-    if (signupPass.length < 6) return setSignupError('Password must be at least 6 characters long.');
+    if (signupPass.length < 8) return setSignupError('Password must be at least 8 characters long.');
     if (signupPass !== signupConfirm) return setSignupError('Passwords do not match.');
-    closeSignup();
+    try {
+      setSignupLoading(true);
+      const derivedName = email.split('@')[0] || 'RiceGuard User';
+      await registerUser({ name: derivedName, email, password: signupPass });
+      Alert.alert('Account created', 'You can now log in with your new credentials.');
+      closeSignup();
+      openLogin();
+      setUsername(email);
+    } catch (err) {
+      setSignupError(err?.message || 'Failed to sign up. Please try again.');
+    } finally {
+      setSignupLoading(false);
+    }
   };
 
   return (
@@ -64,9 +123,12 @@ export default function LoginScreen({ navigation }) {
               onChangeText={setPassword}
               style={styles.input}
             />
+            {!!loginError && <Text style={styles.errorText}>{loginError}</Text>}
             <View style={styles.modalActions}>
               <Button onPress={closeLogin}style={styles.greenButton2}>Cancel</Button>
-              <Button onPress={submitLogin}style={styles.greenButton2}>Log in</Button>
+              <Button onPress={submitLogin}style={styles.greenButton2} disabled={loginLoading}>
+                {loginLoading ? 'Signing in...' : 'Log in'}
+              </Button>
             </View>
           </KeyboardAvoidingView>
         </View>
@@ -102,7 +164,9 @@ export default function LoginScreen({ navigation }) {
             {!!signupError && <Text style={styles.errorText}>{signupError}</Text>}
             <View style={styles.modalActions}>
               <Button onPress={closeSignup}style={styles.greenButton2}>Cancel</Button>
-              <Button onPress={submitSignup}style={styles.greenButton2}>Sign Up</Button>
+              <Button onPress={submitSignup}style={styles.greenButton2} disabled={signupLoading}>
+                {signupLoading ? 'Creating...' : 'Sign Up'}
+              </Button>
             </View>
           </KeyboardAvoidingView>
         </View>

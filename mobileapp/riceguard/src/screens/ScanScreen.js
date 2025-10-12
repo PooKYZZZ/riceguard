@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Alert, ImageBackground } from 'react-native';
 import { fonts } from '../theme/typography';
 import * as ImagePicker from 'expo-image-picker';
 import Button from '../components/Button';
-import { uploadImageAsync } from '../api';
+import { createScan, fetchRecommendation, resolveImageUrl } from '../api';
+import { useAuth } from '../context/AuthContext';
 
 export default function ScanScreen({ navigation }) {
+  const { token, logout } = useAuth();
   const [imageUri, setImageUri] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!token) {
+      navigation.replace('Login');
+    }
+  }, [token, navigation]);
 
   const pickImage = async () => {
     try {
@@ -40,6 +48,11 @@ export default function ScanScreen({ navigation }) {
   };
 
   const handleUpload = async () => {
+    if (!token) {
+      Alert.alert('Login required', 'Please log in before scanning.');
+      navigation.replace('Login');
+      return;
+    }
     let uri = imageUri;
     if (!uri) {
       // If no image yet, open the picker first
@@ -50,14 +63,31 @@ export default function ScanScreen({ navigation }) {
     try {
       setLoading(true);
       setResult(null);
-      const data = await uploadImageAsync(uri);
-      if (data.prediction) {
-        setResult({ disease: data.prediction, confidence: data.confidence, recommendation: data.recommendation, timestamp: data.timestamp });
-      } else {
-        Alert.alert('Error', data.error || 'Unknown error from server');
+      const scan = await createScan({ uri, token });
+
+      let recommendationText = 'No recommendation available.';
+      if (scan?.label && scan.label !== 'uncertain') {
+        const recommendation = await fetchRecommendation(scan.label);
+        if (recommendation?.steps?.length) {
+          recommendationText = `${recommendation.title}\n\u2022 ${recommendation.steps.join('\n\u2022 ')}`;
+        } else if (recommendation?.title) {
+          recommendationText = recommendation.title;
+        }
       }
+
+      const confidencePercent = typeof scan?.confidence === 'number'
+        ? Math.max(0, Math.min(100, Math.round(scan.confidence * 1000) / 10))
+        : null;
+
+      setResult({
+        disease: scan?.label ?? 'uncertain',
+        confidence: confidencePercent,
+        recommendation: recommendationText,
+        timestamp: scan?.createdAt ? new Date(scan.createdAt).toLocaleString() : new Date().toLocaleString(),
+        imageUrl: resolveImageUrl(scan?.imageUrl),
+      });
     } catch (e) {
-      Alert.alert('Upload failed', 'Failed to connect to backend. Ensure the Flask server is reachable from your device.');
+      Alert.alert('Scan failed', e?.message || 'Failed to connect to the backend. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -68,7 +98,9 @@ export default function ScanScreen({ navigation }) {
       <View style={styles.header}>
         <Image source={require('../../assets/logo.png')} style={styles.headerLogo} />
         <View style={styles.navRow}>
-          <TouchableOpacity onPress={() => navigation.replace('Login')}><Text style={styles.navLink}>Log Out</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => { logout(); navigation.replace('Login'); }}>
+            <Text style={styles.navLink}>Log Out</Text>
+          </TouchableOpacity>
           <Text style={[styles.navLink, styles.navActive]}>Scan</Text>
           <TouchableOpacity onPress={() => navigation.navigate('History')}><Text style={styles.navLink}>History</Text></TouchableOpacity>
         </View>
@@ -93,9 +125,18 @@ export default function ScanScreen({ navigation }) {
           <View style={styles.resultBox}>
             <Text style={styles.resultTitle}>Result</Text>
             <Text><Text style={styles.bold}>Disease:</Text> {result.disease}</Text>
-            <Text><Text style={styles.bold}>Confidence:</Text> {result.confidence}%</Text>
-            <Text><Text style={styles.bold}>Recommendation:</Text> {result.recommendation}</Text>
+            <Text>
+              <Text style={styles.bold}>Confidence:</Text>{' '}
+              {typeof result.confidence === 'number' ? `${result.confidence.toFixed(1)}%` : 'N/A'}
+            </Text>
+            <Text style={styles.bold}>Recommendation:</Text>
+            <Text style={{ marginTop: 4 }}>{result.recommendation}</Text>
             <Text><Text style={styles.bold}>Analyzed On:</Text> {result.timestamp}</Text>
+            {!!result.imageUrl && (
+              <Text selectable>
+                <Text style={styles.bold}>Stored Image:</Text> {result.imageUrl}
+              </Text>
+            )}
           </View>
         )}
 

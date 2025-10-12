@@ -14,7 +14,17 @@ TOKEN_EXPIRE_HOURS: int = int(os.getenv("TOKEN_EXPIRE_HOURS", "6"))
 UPLOAD_DIR: str = os.getenv("UPLOAD_DIR", "uploads")
 MAX_UPLOAD_MB: int = int(os.getenv("MAX_UPLOAD_MB", "8"))
 
+_default_origins = [
+    "http://localhost:8081",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:19000",
+    "http://127.0.0.1:19006",
+    "http://localhost:19000",
+    "http://localhost:19006",
+]
+
 ALLOWED_ORIGINS: List[str] = [o.strip() for o in os.getenv(
     "ALLOWED_ORIGINS",
-    "http://localhost:8081,http://localhost:5173,http://127.0.0.1:5173"
+    ",".join(_default_origins)
 ).split(",") if o.strip()]

@@ -102,7 +102,7 @@ def create_scan(
     # ML inference
     try:
         label_str, confidence = predict_image(image_path)
-        label = DiseaseKey(label_str)
+        label = DiseaseKey.parse(label_str)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Model inference error: {e}")
 
@@ -141,7 +141,7 @@ def list_scans(creds: HTTPAuthorizationCredentials = Depends(bearer)) -> ScanLis
         items.append(
             ScanItem(
                 id=str(d["_id"]),
-                label=DiseaseKey(d["label"]),
+                label=DiseaseKey.parse(d["label"]),
                 confidence=d.get("confidence"),
                 modelVersion=d["modelVersion"],
                 notes=d.get("notes"),

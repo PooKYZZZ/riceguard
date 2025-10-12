@@ -2,14 +2,29 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { fonts } from '../theme/typography';
 
-export default function Button({ variant = 'primary', style, textStyle, children, ...props }) {
+export default function Button({
+  variant = 'primary',
+  style,
+  textStyle,
+  disabled,
+  children,
+  ...props
+}) {
+  const variantStyle = variant === 'primary' ? styles.primary : styles.outline;
+  const textVariantStyle = variant === 'primary' ? styles.textPrimary : styles.textOutline;
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      style={[styles.base, variant === 'primary' ? styles.primary : styles.outline, style]}
+      style={[
+        styles.base,
+        variantStyle,
+        disabled && styles.disabled,
+        style,
+      ]}
+      disabled={disabled}
       {...props}
     >
-      <Text style={[styles.text, variant === 'primary' ? styles.textPrimary : styles.textOutline, textStyle]}>
+      <Text style={[styles.text, textVariantStyle, disabled && styles.textDisabled, textStyle]}>
         {children}
       </Text>
     </TouchableOpacity>
@@ -33,7 +48,11 @@ const styles = StyleSheet.create({
     borderColor: '#2563eb',
     backgroundColor: 'transparent',
   },
+  disabled: {
+    opacity: 0.6,
+  },
   text: { fontSize: 16, fontFamily: fonts.semi },
   textPrimary: { color: 'white' },
   textOutline: { color: '#2563eb' },
+  textDisabled: { color: '#d1d5db' },
 });
