@@ -2,13 +2,14 @@ from datetime import datetime
 from pymongo import MongoClient, ASCENDING, DESCENDING
 from bson import ObjectId
 from settings import MONGO_URI, DB_NAME
-
+import certifi
 _client: MongoClient | None = None
 
 def get_client() -> MongoClient:
     global _client
     if _client is None:
-        _client = MongoClient(MONGO_URI, uuidRepresentation="standard")
+        _client = MongoClient(MONGO_URI, uuidRepresentation="standard",tlsCAFile=certifi.where())
+        
     return _client
 
 
