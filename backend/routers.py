@@ -104,6 +104,7 @@ def create_scan(
         label_str, confidence = predict_image(image_path)
         label = DiseaseKey.parse(label_str)
     except Exception as e:
+        import traceback; traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Model inference error: {e}")
 
     # Persist
